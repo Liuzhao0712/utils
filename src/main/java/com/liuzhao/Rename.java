@@ -64,4 +64,33 @@ public class Rename {
             }
         }
     }
+    static public void rename(String sor,String m,String n) throws Exception {
+        File file = new File(sor);
+        if (file.exists()) {
+            Properties properties = new Properties();
+            properties.load(new FileReader("src/main/resources/mapper.properties"));
+            Set<Object> objects = properties.keySet();
+            File[] files = file.listFiles();
+            assert files != null;
+            for (File aFile : files) {
+                if (!aFile.isDirectory()) {
+                    String name = aFile.getName();
+//                        String tempName = sor + "\\" + count + path.substring(path.lastIndexOf("."));
+                    for (Object object : objects) {
+                        String object1 = (String) object;
+                        if (object1.matches("\\w*"+name.substring(0, name.lastIndexOf(".")) +"\\w*" ) ) {
+                            // 源路径名 + \\ + 学号 + 姓名 + 后缀
+                            String tempName = sor + "\\" + object1 +properties.getProperty(object1) +  name.substring(name.lastIndexOf("."));
+                            System.out.println(tempName);
+                            //如果更名失败加大名称变化重新更名
+                            if(!aFile.renameTo(new File(tempName))) {
+                                return;
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+    }
 }
